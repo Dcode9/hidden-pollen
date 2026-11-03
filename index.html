@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hidden Pollen - steganography studio</title>
+<style>
+  :root { color-scheme: dark; --bg:#101014; --card:#1a1a22; --ink:#e8e6f0; --dim:#9a97ab; --acc:#a78bfa; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.5 system-ui,sans-serif; background:var(--bg); color:var(--ink); }
+  main { max-width: 880px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.6rem; } h1 .p { color: var(--acc); }
+  .card { background: var(--card); border-radius: 14px; padding: 18px; margin: 14px 0; }
+  textarea, input[type=text] { width:100%; background:#0c0c10; color:var(--ink); border:1px solid #2c2c38; border-radius:8px; padding:10px; font:inherit; }
+  textarea { min-height: 90px; resize: vertical; }
+  button { background:var(--acc); color:#14101f; border:0; border-radius:8px; padding:10px 16px; font:600 15px system-ui; cursor:pointer; }
+  button.ghost { background:#2c2c38; color:var(--ink); }
+  button:disabled { opacity:.5; cursor:default; }
+  img.preview { max-width:100%; border-radius:10px; display:block; margin-top:12px; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+  .status { color:var(--dim); font-size:.92rem; min-height:1.4em; }
+  .status.err { color:#f87171; } .status.ok { color:#4ade80; }
+  .drop { border:2px dashed #3a3a48; border-radius:10px; padding:22px; text-align:center; color:var(--dim); cursor:pointer; }
+  .drop.over { border-color:var(--acc); color:var(--ink); }
+  .cap { font-size:.85rem; color:var(--dim); }
+  a { color:var(--acc); }
+</style>
+<script defer src="https://cdn.jsdelivr.net/npm/@pollinations/ui@0.1.0-alpha.20/dist/connect.js"></script>
+</head>
+<body>
+<main>
+  <h1>Hidden <span class="p">Pollen</span></h1>
+  <p>Hide secret messages inside images. The cover image can be anything - generate one with
+     <a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations</a> or drop your own.
+     Everything runs in your browser; the message never leaves this page.</p>
+
+  <section class="card" id="encode-card">
+    <h2>Hide a message</h2>
+    <div class="row">
+      <input type="text" id="prompt" placeholder="Cover image idea, e.g. 'a fox made of aurora light'">
+      <button id="gen">Generate cover</button>
+      <span class="cap">or</span>
+      <button class="ghost" id="pick">Upload image</button>
+      <input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden>
+    </div>
+    <div class="drop" id="drop">drag &amp; drop an image here</div>
+    <div class="row"><img class="preview" id="cover" alt="" hidden></div>
+    <div class="row"><textarea id="secret" placeholder="Your hidden message"></textarea></div>
+    <div class="row">
+      <button id="encode" disabled>Hide message &amp; download PNG</button>
+      <span class="cap" id="capacity"></span>
+    </div>
+    <p class="status" id="enc-status"></p>
+  </section>
+
+
+  <section class="card" id="fable-card">
+    <h2>Fable mode - let an AI hide it</h2>
+    <p class="cap">Mirrors the <a href="https://www.lesswrong.com/posts/WHEQps5PK8LrrcTAb/how-does-fable-5-1-hide-messages-in-images" target="_blank" rel="noopener">Fable 5.1 experiment</a>: one AI session hides your secret in an SVG drawing, a fresh session tries to find it.</p>
+    <polli-connect id="polli" app-key="pk_TODO_DASHBOARD" budget="2" expiry="30"></polli-connect>
+    <p class="cap" id="connect-note">Connect your Pollen balance to power the AI (users pay with their own Pollen).</p>
+    <div class="row"><textarea id="fable-secret" placeholder="Secret for the AI to hide"></textarea></div>
+    <div class="row">
+      <button id="fable-hide">AI: hide in SVG</button>
+      <button class="ghost" id="fable-detect" disabled>Fresh AI: try to find it</button>
+    </div>
+    <div class="row"><div id="svg-view" style="width:100%"></div></div>
+    <div class="row"><textarea id="fable-result" placeholder="The detective AI's analysis appears here" readonly></textarea></div>
+    <p class="status" id="fable-status"></p>
+  </section>
+
+  <section class="card">
+    <h2>Reveal a message</h2>
+    <div class="row"><button class="ghost" id="pick2">Upload image to decode</button>
+    <input type="file" id="file2" accept="image/png" hidden></div>
+    <div class="drop" id="drop2">drag &amp; drop an encoded PNG here</div>
+    <div class="row"><textarea id="revealed" placeholder="The hidden message appears here" readonly></textarea></div>
+    <p class="status" id="dec-status"></p>
+  </section>
+
+  <p class="cap">Built for the Pollinations steganography quest. LSB encoding on RGB channels, UTF-8 safe.
+     Download as PNG (lossless) - JPEG recompression would destroy the message.</p>
+</main>
+<script src="stego.js"></script>
+<script src="fable.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
