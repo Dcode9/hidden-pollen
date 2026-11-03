@@ -32,7 +32,8 @@
   <h1>Hidden <span class="p">Pollen</span></h1>
   <p>Hide secret messages inside images. The cover image can be anything - generate one with
      <a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations</a> or drop your own.
-     Everything runs in your browser; the message never leaves this page.</p>
+     The LSB studio below runs entirely in your browser - your message never leaves this page.
+     Fable mode sends your text to Pollinations' AI, so keep it playful, not sensitive.</p>
 
   <section class="card" id="encode-card">
     <h2>Hide a message</h2>
@@ -58,7 +59,7 @@
     <h2>Fable mode - let an AI hide it</h2>
     <p class="cap">Mirrors the <a href="https://www.lesswrong.com/posts/WHEQps5PK8LrrcTAb/how-does-fable-5-1-hide-messages-in-images" target="_blank" rel="noopener">Fable 5.1 experiment</a>: one AI session hides your secret in an SVG drawing, a fresh session tries to find it.</p>
     <polli-connect id="polli" app-key="pk_6jjdgFFbVI2YG58N" budget="2" expiry="30"></polli-connect>
-    <p class="cap" id="connect-note">Connect your Pollen balance to power the AI (users pay with their own Pollen).</p>
+    <p class="cap" id="connect-note">Connect your Pollen balance to power the AI (users pay with their own Pollen). Heads up: whatever you type here is sent to Pollinations' AI services.</p>
     <div class="row"><textarea id="fable-secret" placeholder="Secret for the AI to hide"></textarea></div>
     <div class="row">
       <button id="fable-hide">AI: hide in SVG</button>
