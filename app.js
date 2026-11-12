@@ -37,10 +37,12 @@
   // --- cover sources ---
   $('gen').addEventListener('click', function () {
     var prompt = $('prompt').value.trim() || 'a meadow of glowing flowers, digital art';
-    say(encStatus, 'generating cover image with Pollinations...');
+    if (!needKey(encStatus)) return;
+    say(encStatus, 'generating cover image with Pollinations (uses your connected Pollen balance)...');
     $('gen').disabled = true;
-    var url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(prompt) +
-      '?width=1024&height=1024&nologo=true&seed=' + Math.floor(Math.random() * 1e9);
+    var url = 'https://gen.pollinations.ai/image/' + encodeURIComponent(prompt) +
+      '?width=1024&height=1024&nologo=true&seed=' + Math.floor(Math.random() * 1e9) +
+      '&key=' + encodeURIComponent(userKey());
     loadImageUrl(url).then(setCover).then(function () {
       say(encStatus, 'cover ready', 'ok'); $('gen').disabled = false;
     }).catch(function (e) {
@@ -105,15 +107,15 @@
   var lastSvg = null;
   var polliEl = $('polli');
   function userKey() { return polliEl && polliEl.apiKey ? polliEl.apiKey : null; }
-  function needKey() {
+  function needKey(statusEl) {
     var k = userKey();
-    if (!k) say($('fable-status'), 'connect your Pollen balance first (button above)', 'err');
+    if (!k) say(statusEl, 'connect your Pollen balance first (button in AI hide-and-seek above)', 'err');
     return k;
   }
   $('fable-hide').addEventListener('click', function () {
     var secret = $('fable-secret').value.trim();
     if (!secret) { say($('fable-status'), 'enter a secret first', 'err'); return; }
-    if (!needKey()) return;
+    if (!needKey($('fable-status'))) return;
     say($('fable-status'), 'AI is drawing your secret into an SVG...');
     $('fable-hide').disabled = true;
     Fable.hide(secret, { key: userKey() }).then(function (r) {
@@ -129,7 +131,7 @@
   });
   $('fable-detect').addEventListener('click', function () {
     if (!lastSvg) return;
-    if (!needKey()) return;
+    if (!needKey($('fable-status'))) return;
     say($('fable-status'), 'fresh AI session is inspecting the SVG...');
     $('fable-detect').disabled = true;
     Fable.detect(lastSvg, { key: userKey() }).then(function (r) {
